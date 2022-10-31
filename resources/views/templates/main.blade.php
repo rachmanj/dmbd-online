@@ -1,45 +1,53 @@
 <!DOCTYPE html>
 
 <html lang="en">
+<head>
+  
   @include('templates.partials.head')
-<body class="hold-transition layout-top-nav layout-navbar-fixed">
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 
-  @include('templates.partials.navbar')
+  <!-- Navbar -->
+    @include('templates.partials.navbar')
+  <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    @include('templates.partials.sidebar')
+    <!-- End Main Sidebar Container -->
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">@yield('title_page')</small></h1>
-          </div><!-- /.col -->
-          @include('templates.partials.breadcrumb')
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
 
+    <!-- start breadcrumb -->
+    @include('templates.partials.breadcrumb')
+    <!-- end breadcrumb -->
+    
     <!-- Main content -->
     <div class="content">
-      <div class="container">
-        
-        @yield('content')
 
+      <div class="container-fluid">
+
+        @yield('content')
+        
       </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
+
+    </div>  <!-- /.content -->
+
+
+  </div>  <!-- /.content-wrapper -->
   
-  @include('templates.partials.footer')
+  
+  <!-- start footer -->
+    @include('templates.partials.footer')
+  <!-- /.end footer -->
 
 </div>
 <!-- ./wrapper -->
 
 <!-- REQUIRED SCRIPTS -->
+
 @include('templates.partials.script')
 
 </body>

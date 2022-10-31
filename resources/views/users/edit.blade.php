@@ -35,9 +35,29 @@
               <div class="col-12">
                 <div class="form-group">
                   <label for="username">Username</label>
-                  <input type="text" name="username" value="{{ $user->username }}" class="form-control" disabled>
+                  <input type="text" name="username" value="{{ $user->username }}" class="form-control">
                 </div>
               </div>
+            </div>
+
+            <div class="form-group">
+              <label for='project'>Project</label>
+              <select name="project" class="form-control">
+                <option value="">-- Select Project --</option>
+                @foreach ($projects as $project)
+                  <option value="{{ $project->project_code }}" {{ $project->project_code === $user->project ? 'selected' : '' }}>{{ $project->project_code }}</option>
+                @endforeach
+              </select>
+            </div>
+  
+            <div class="form-group">
+              <label for='department_id'>Department</label>
+              <select name="department_id" class="form-control">
+                <option value="">-- Select Department --</option>
+                @foreach ($departments as $department)
+                  <option value="{{ $department->id }}" {{ $department->id === $user->department_id ? 'selected' : '' }}  >{{ $department->department_name }}</option>
+                @endforeach
+              </select>
             </div>
 
             <div class="row">
