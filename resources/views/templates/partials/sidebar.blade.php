@@ -22,7 +22,8 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
    
-            {{-- @include('templates.partials.menu.general') --}}
+          <li class="nav-header">PLANT</li>
+            @include('templates.partials.menu.plant')
             {{-- @include('templates.partials.menu.gs') --}}
             {{-- @include('templates.partials.menu.category') --}}
   
@@ -33,7 +34,7 @@
   
         {{-- @can('akses_admin') --}}
             <li class="nav-header">ADMIN</li>
-            @include('templates.partials.menu.users')
+            @include('templates.partials.menu.admin')
         {{-- @endcan --}}
           
         </ul>
