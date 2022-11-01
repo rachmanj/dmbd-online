@@ -1,0 +1,1 @@
+<a href="{{ route('wo-data.show', $model->id) }}"><i class="fas fa-search"></i></a>

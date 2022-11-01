@@ -1,15 +1,15 @@
 /* SELECT * FROM OSCL T0 */
-Declare @Project AS NVARCHAR(8)
-SET @Project = /* T0.U_MIS_Project  */ '[%0]'
+-- Declare @Project AS NVARCHAR(8)
+-- SET @Project = /* T0.U_MIS_Project  */ '[%0]'
 SELECT 
-T0.U_MIS_Project [Project],
+T0.U_MIS_Project [project],
 (SELECT Top 1 CASE T8.U_MIS_PlantGroup 
 WHEN 'A' THEN 'A'
  WHEN 'B' THEN 'B'
  WHEN 'C' THEN 'C'
-END FROM OITM T8 WHERE  T0.U_MIS_UnitNo=T8.U_MIS_UnitNo ORDER BY T8.U_MIS_PlantGroup Desc)[Plant Group],
-(SELECT Top 1 T8.U_MIS_UType FROM OITM T8 WHERE  T0.U_MIS_UnitNo=T8.U_MIS_UnitNo ORDER BY T8.U_MIS_UType  Desc)[Unit Type],
-T0.U_MIS_UnitNo [Unit Code], 
+END FROM OITM T8 WHERE  T0.U_MIS_UnitNo=T8.U_MIS_UnitNo ORDER BY T8.U_MIS_PlantGroup Desc)[plant_group],
+(SELECT Top 1 T8.U_MIS_UType FROM OITM T8 WHERE  T0.U_MIS_UnitNo=T8.U_MIS_UnitNo ORDER BY T8.U_MIS_UType  Desc)[unit_type],
+T0.U_MIS_UnitNo [unit_code], 
 T0.U_MIS_ModeNo [Unit Model],
 CASE T0.[status] WHEN '-1' THEN 'Closed' WHEN '-3' THEN 'Open' END [WO Status],
 CASE T0.U_MIS_StatPos  
@@ -76,7 +76,7 @@ LEFT JOIN OWTR T5 ON T4.DocNum = T5.U_MIS_DocRefNo
 
 
 WHERE T0.status = '-3' 
-AND T0.U_MIS_Project = @Project
+-- AND T0.U_MIS_Project = @Project
 
 UNION ALL 
 
@@ -150,4 +150,4 @@ LEFT JOIN ODRF T3 ON T1.DocNum = T3.U_MIS_MRNo
 LEFT JOIN OPOR T2 ON T3.DocEntry= T2.U_MIS_PRNo
 WHERE T0.status = '-3' 
 AND T3.ObjType ='1470000113' AND T3.DocStatus='O'
-AND T0.U_MIS_Project = @Project
+-- AND T0.U_MIS_Project = @Project

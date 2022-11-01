@@ -21,6 +21,7 @@
           </div>
         @endif
         <button class="btn btn-sm btn-success mx-2" data-toggle="modal" data-target="#wo-upload"><i class="fas fa-upload"></i> Upload</button>
+        <a href="{{ route('wo-data.truncate') }}" class="btn btn-sm btn-danger" onclick="return confirm('Are You sure You want to delete all records?')"><i class="fas fa-trash"></i> Truncate Table</a>
       </div>
       <!-- /.card-header -->
       <div class="card-body">

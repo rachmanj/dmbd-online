@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/data', [WoDataController::class, 'data'])->name('data');
         Route::get('/', [WoDataController::class, 'index'])->name('index');
         Route::post('/upload', [WoDataController::class, 'upload'])->name('upload');
+        Route::get('/truncate', [WoDataController::class, 'truncate'])->name('truncate');
+        Route::get('/{id}', [WoDataController::class, 'show'])->name('show');
     });
 
     Route::prefix('dashboard')->name('dashboard.')->group(function () {

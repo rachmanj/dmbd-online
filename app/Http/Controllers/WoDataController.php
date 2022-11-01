@@ -16,9 +16,6 @@ class WoDataController extends Controller
 
     public function upload(Request $request)
     {
-
-
-
         // validasi
         $this->validate($request, [
             'file_upload' => 'required|mimes:xls,xlsx'
@@ -29,8 +26,6 @@ class WoDataController extends Controller
 
         // membuat nama file unik
         $nama_file = rand() . '_' . $file->getClientOriginalName();
-        // return $nama_file;
-        // die;
 
         // upload ke folder file_upload
         $file->move('file_upload', $nama_file);
@@ -40,6 +35,19 @@ class WoDataController extends Controller
 
         // alihkan halaman kembali
         return redirect()->route('wo-data.index')->with('status', 'Data Berhasil Diimport!');
+    }
+
+    public function show($id)
+    {
+        $wo_detail = WoData::findOrFail($id);
+        return view('wo-data.show', compact('wo_detail'));
+    }
+
+    public function truncate()
+    {
+        WoData::truncate();
+
+        return redirect()->route('wo-data.index')->with('success', 'Table has been truncated.');
     }
 
     public function data()
