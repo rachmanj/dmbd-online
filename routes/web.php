@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\BreakdownController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RegisterController;
@@ -24,11 +26,13 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('users/data', [UserController::class, 'data'])->name('users.data');
-    Route::put('users/activate/{id}', [UserController::class, 'activate'])->name('users.activate');
-    Route::put('users/deactivate/{id}', [UserController::class, 'deactivate'])->name('users.deactivate');
-    Route::put('users/roles-update/{id}', [UserController::class, 'roles_user_update'])->name('users.roles_user_update');
-    Route::resource('users', UserController::class);
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/data', [UserController::class, 'data'])->name('data');
+        Route::put('/activate/{id}', [UserController::class, 'activate'])->name('activate');
+        Route::put('/deactivate/{id}', [UserController::class, 'deactivate'])->name('deactivate');
+        Route::put('/roles-update/{id}', [UserController::class, 'roles_user_update'])->name('roles_user_update');
+        Route::resource('/', UserController::class);
+    });
 
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
@@ -39,6 +43,18 @@ Route::middleware('auth')->group(function () {
         Route::post('/upload', [WoDataController::class, 'upload'])->name('upload');
         Route::get('/truncate', [WoDataController::class, 'truncate'])->name('truncate');
         Route::get('/{id}', [WoDataController::class, 'show'])->name('show');
+    });
+
+    Route::prefix('breakdowns')->name('breakdowns.')->group(function () {
+        Route::get('/data', [BreakdownController::class, 'data'])->name('data');
+        Route::put('/{id}/update-status', [BreakdownController::class, 'update_status'])->name('update_status');
+    });
+    Route::resource('breakdowns', BreakdownController::class);
+
+    Route::prefix('history')->name('history.')->group(function () {
+        Route::get('/data', [HistoryController::class, 'data'])->name('data');
+        Route::get('/', [HistoryController::class, 'index'])->name('index');
+        Route::get('/{id}/show', [HistoryController::class, 'show'])->name('show');
     });
 
     Route::prefix('dashboard')->name('dashboard.')->group(function () {

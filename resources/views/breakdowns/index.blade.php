@@ -1,11 +1,11 @@
 @extends('templates.main')
 
 @section('title_page')
-    Work Order Data
+    Breakdown Units
 @endsection
 
 @section('breadcrumb_title')
-    wo
+    breakdown
 @endsection
 
 @section('content')
@@ -20,19 +20,25 @@
             {{ Session::get('success') }}
           </div>
         @endif
-        <button class="btn btn-sm btn-success mx-2" data-toggle="modal" data-target="#wo-upload"><i class="fas fa-upload"></i> Upload</button>
-        <a href="{{ route('wo-data.truncate') }}" class="btn btn-sm btn-danger" onclick="return confirm('Are You sure You want to delete all records?')"><i class="fas fa-trash"></i> Truncate Table</a>
+        @if (Session::has('error'))
+          <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ Session::get('error') }}
+          </div>
+        @endif
+        <a href="{{ route('breakdowns.create') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Breakdown Data</a>
       </div>
       <!-- /.card-header -->
       <div class="card-body">
-        <table id="wo-data" class="table table-bordered table-striped">
+        <table id="breakdowns" class="table table-bordered table-striped">
           <thead>
           <tr>
             <th>No</th>
-            <th>WO No</th>
-            <th>Date</th>
-            <th>Project</th>
-            <th>Unit</th>
+            <th>BD No</th>
+            <th>Unit No</th>
+            <th>Start Date</th>
+            <th>Days</th>
+            <th>Description</th>
             <th>action</th>
           </tr>
           </thead>
@@ -46,34 +52,6 @@
 </div>
 <!-- /.row -->
 
-<div class="modal fade" id="wo-upload">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title"> WO Data Upload</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form action="{{ route('wo-data.upload') }}" enctype="multipart/form-data" method="POST">
-          @csrf
-        <div class="modal-body">
-            <label>Pilih file excel</label>
-            <div class="form-group">
-              <input type="file" name='file_upload' required class="form-control">
-            </div>
-        </div>
-        <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary"> Upload</button>
-        </div>
-      </form>
-      </div>
-      <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-  </div>
-  <!-- /.modal -->
 @endsection
 
 @section('styles')
@@ -95,19 +73,31 @@
   
   <script>
     $(function () {
-      $("#wo-data").DataTable({
+      $("#breakdowns").DataTable({
         processing: true,
         serverSide: true,
-        ajax: '{{ route('wo-data.data') }}',
+        ajax: '{{ route('breakdowns.data') }}',
         columns: [
           {data: 'DT_RowIndex', orderable: false, searchable: false},
-          {data: 'wo_no'},
-          {data: 'wo_date'},
-          {data: 'project'},
-          {data: 'unit_code'},
+          {data: 'bd_no'},
+          {data: 'unit_no'},
+          {data: 'start_date'},
+          {data: 'days'},
+          {data: 'description'},
           {data: 'action'},
         ],
+        rowCallback: function(row, data, index) {
+        if(data.days > 30) {
+          $(row).css('color','red')
+            }
+        },
         fixedHeader: true,
+        columnDefs: [
+              {
+                "targets": [4],
+                "className": "text-right"
+              }
+            ]
       })
     });
   </script>

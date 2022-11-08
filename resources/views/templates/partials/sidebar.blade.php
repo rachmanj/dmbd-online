@@ -24,7 +24,7 @@
    
           <li class="nav-header">PLANT</li>
             @include('templates.partials.menu.plant')
-            {{-- @include('templates.partials.menu.gs') --}}
+            @include('templates.partials.menu.wo-data')
             {{-- @include('templates.partials.menu.category') --}}
   
           {{-- <li class="nav-header">MASTER DATA</li> --}}
