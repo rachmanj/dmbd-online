@@ -23,8 +23,8 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="employee_id">Unit No</label>
-                            <input type="text" name="unit_no" value="{{ $breakdown->unit_no }}" class="form-control" readonly>
+                            <label for="unit_code">Unit No</label>
+                            <input type="text" name="unit_code" value="{{ $breakdown->unit_code  }}" class="form-control" readonly>
                         </div>
                     </div>
                     <div class="col-6">
@@ -35,7 +35,7 @@
                     </div>
                 </div>
   
-                <div class="row">
+                <div class="row">     
                     <div class="col-3">
                         <div class="form-group">
                             <label for="start_date">Start Date</label>

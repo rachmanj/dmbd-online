@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('breakdowns')->name('breakdowns.')->group(function () {
         Route::get('/data', [BreakdownController::class, 'data'])->name('data');
+        Route::get('/{id}/wo-data', [BreakdownController::class, 'wo_data'])->name('wo_data');
         Route::put('/{id}/update-status', [BreakdownController::class, 'update_status'])->name('update_status');
     });
     Route::resource('breakdowns', BreakdownController::class);

@@ -27,7 +27,7 @@ return new class extends Migration
             $table->date('malfunction_date')->nullable(); // gabungan antara malfunction date dan time
             $table->integer('malfunction_time')->nullable(); // gabungan antara malfunction date dan time
             $table->integer('days_of_breakdown')->nullable(); // lama hari breakdwon s/d hari ini
-            $table->string('notification_description', 100)->nullable();
+            $table->text('notification_description')->nullable();
             $table->string('job_category', 20)->nullable();
             $table->string('wo_no', 50)->nullable();
             $table->string('call_id', 20)->nullable();

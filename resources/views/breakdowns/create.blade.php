@@ -24,11 +24,11 @@
               <div class="row">
                 <div class="col-6">
                   <div class="form-group">
-                    <label for="employee_id">Unit No</label>
-                    <select name="unit_no" id="unit_no" class="form-control select2bs4 @error('unit_no') is-invalid @enderror">
+                    <label for="unit_code">Unit No</label>
+                    <select name="unit_code" id="unit_code" class="form-control select2bs4 @error('unit_code') is-invalid @enderror">
                       <option value="">-- select Unit No --</option>
                       @foreach ($units as $unit)
-                          <option value="{{ $unit }}" {{ old('unit_no') === $unit ? 'selected' : '' }}>{{ $unit }}</option>
+                          <option value="{{ $unit->unit_code }}" {{ old('unit_code') === $unit->unit_code ? 'selected' : '' }}>{{ $unit->unit_code . ' - ' . $unit->unit_model }}</option>
                       @endforeach
                     </select>
                     @error('unit_no')

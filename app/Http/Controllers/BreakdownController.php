@@ -16,7 +16,9 @@ class BreakdownController extends Controller
 
     public function create()
     {
-        $units = ['E 021', 'E 022', 'DZ 103', 'RD 054'];
+        // $units = ['E 021', 'E 022', 'DZ 103', 'RD 054'];
+        // select unit_code from WoData and distinct
+        $units = WoData::select('unit_code', 'unit_model')->distinct()->orderBy('unit_code', 'asc')->get();
 
         return view('breakdowns.create', compact('units'));
     }
@@ -24,7 +26,7 @@ class BreakdownController extends Controller
     public function store(Request $request)
     {
         $validated_data = $request->validate([
-            'unit_no' => 'required',
+            'unit_code' => 'required',
             'priority' => 'required',
             'start_date' => 'required',
             'hm' => 'required',
@@ -54,7 +56,7 @@ class BreakdownController extends Controller
     public function update(Request $request, $id)
     {
         $validated_data = $request->validate([
-            'unit_no' => 'required',
+            'unit_code' => 'required',
             'priority' => 'required',
             'start_date' => 'required',
             'hm' => 'required',
@@ -71,8 +73,9 @@ class BreakdownController extends Controller
     public function show($id)
     {
         $breakdown = Breakdown::findOrFail($id);
-        $wos = WoData::where('unit_code', $breakdown->unit_no)->orderBy('wo_date', 'asc')->get();
-        return view('breakdowns.show', compact('breakdown', 'wos'));
+        $unit_model = WoData::where('unit_code', $breakdown->unit_code)->first()->unit_model;
+        $wos = WoData::where('unit_code', $breakdown->unit_code)->orderBy('wo_date', 'asc')->get();
+        return view('breakdowns.show', compact('breakdown', 'wos', 'unit_model'));
     }
 
     public function update_status(Request $request, $id)
@@ -117,6 +120,33 @@ class BreakdownController extends Controller
             ->addIndexColumn()
             ->addColumn('action', 'breakdowns.action')
             ->rawColumns(['action'])
+            ->toJson();
+    }
+
+    public function wo_data($id)
+    {
+        $breakdown = Breakdown::findOrFail($id);
+        $unit_wos = WoData::where('unit_code', $breakdown->unit_code)->orderBy('wo_date', 'asc')->get();
+
+        return datatables()->of($unit_wos)
+            ->editColumn('wo_date', function ($unit_wos) {
+                if ($unit_wos->wo_date) {
+                    return date('d-m-Y', strtotime($unit_wos->wo_date));
+                } else {
+                    return '-';
+                }
+            })
+            ->addColumn('days', function ($unit_wos) {
+                if ($unit_wos->wo_date) {
+                    $start_date = new \DateTime($unit_wos->wo_date);
+                    $now = new \DateTime();
+                    $diff = $start_date->diff($now);
+                    return $diff->days;
+                } else {
+                    return '-';
+                }
+            })
+            ->addIndexColumn()
             ->toJson();
     }
 }

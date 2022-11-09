@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('breakdowns', function (Blueprint $table) {
             $table->id();
             $table->string('bd_no')->nullable();
-            $table->string('unit_no')->nullable();
+            $table->string('unit_code')->nullable();
             $table->string('status')->nullable();
             $table->string('priority')->nullable();
             $table->date('start_date')->nullable();

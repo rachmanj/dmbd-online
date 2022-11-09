@@ -80,7 +80,7 @@
         columns: [
           {data: 'DT_RowIndex', orderable: false, searchable: false},
           {data: 'bd_no'},
-          {data: 'unit_no'},
+          {data: 'unit_code'},
           {data: 'start_date'},
           {data: 'days'},
           {data: 'description'},

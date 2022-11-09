@@ -69,18 +69,13 @@
         columns: [
           {data: 'DT_RowIndex', orderable: false, searchable: false},
           {data: 'bd_no'},
-          {data: 'unit_no'},
+          {data: 'unit_code'},
           {data: 'start_date'},
           {data: 'end_date'},
           {data: 'days'},
           {data: 'description'},
           {data: 'action'},
         ],
-        rowCallback: function(row, data, index) {
-        if(data.days > 30) {
-          $(row).css('color','red')
-            }
-        },
         fixedHeader: true,
         columnDefs: [
               {

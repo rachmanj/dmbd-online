@@ -1,4 +1,4 @@
-/* SELECT * FROM OSCL T0 */
+-- /* SELECT * FROM OSCL T0 */
 -- Declare @Project AS NVARCHAR(8)
 -- SET @Project = /* T0.U_MIS_Project  */ '[%0]'
 SELECT 
