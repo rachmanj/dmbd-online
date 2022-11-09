@@ -48,7 +48,7 @@ class BreakdownController extends Controller
     public function edit($id)
     {
         $breakdown = Breakdown::findOrFail($id);
-        $units = ['E 021', 'E 022', 'DZ 103', 'RD 054', 'VT 028', 'RD 049'];
+        $units = WoData::select('unit_code', 'unit_model')->distinct()->orderBy('unit_code', 'asc')->get();
         $priorities = Priority::orderBy('priority_code', 'asc')->get();
         return view('breakdowns.edit', compact('units', 'breakdown', 'priorities'));
     }
