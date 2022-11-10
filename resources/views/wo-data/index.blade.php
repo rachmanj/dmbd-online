@@ -33,6 +33,8 @@
               <th>Date</th>
               <th>Project</th>
               <th>Unit</th>
+              <th>Status</th>
+              <th>Days</th>
               <th>action</th>
             </tr>
             </thead>
@@ -105,9 +107,17 @@
           {data: 'wo_date'},
           {data: 'project'},
           {data: 'unit_code'},
+          {data: 'status_position'},
+          {data: 'days'},
           {data: 'action'},
         ],
         fixedHeader: true,
+        columnDefs: [
+              {
+                "targets": [6],
+                "className": "text-right"
+              }
+            ]
       })
     });
   </script>

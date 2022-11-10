@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\WoDataImport;
 use App\Models\WoData;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -52,12 +53,20 @@ class WoDataController extends Controller
 
     public function data()
     {
-        $wo_opens = WoData::all();
+        $wo_opens = WoData::orderBy('wo_date', 'desc')->get();
 
         return datatables()->of($wo_opens)
             ->editColumn('wo_date', function ($wo_opens) {
                 if ($wo_opens->wo_date) {
                     return date('d-m-Y', strtotime($wo_opens->wo_date));
+                } else {
+                    return '-';
+                }
+            })
+            ->addColumn('days', function ($wo_opens) {
+                if ($wo_opens->wo_date) {
+                    $date = Carbon::parse($wo_opens->wo_date);
+                    return $date->diffInDays(Carbon::now());
                 } else {
                     return '-';
                 }
