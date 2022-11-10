@@ -14,7 +14,7 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">New Breakdown Data</h3>
+            <h3 class="card-title">Edit Breakdown Data</h3>
             <a href="{{ route('breakdowns.index') }}" class="btn btn-sm btn-primary float-right"><i class="fas fa-undo"></i> Back</a>
           </div>
           <div class="card-body">
@@ -51,11 +51,22 @@
               </div>
   
               <div class="row">
-                <div class="col-6">
+                <div class="col-4">
                   <div class="form-group">
                     <label for="start_date">Start Date</label>
-                    <input type="date" name="start_date" value="{{ $breakdown->start_date }}" class="form-control @error('start_date') is-invalid @enderror">
+                    <input type="date" name="start_date" value="{{ $st_date }}" class="form-control @error('start_date') is-invalid @enderror">
                     @error('start_date')
+                    <div class="invalid-feedback">
+                      {{ $message }}
+                    </div>
+                    @enderror
+                  </div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <label for="start_time">Start Time</label>
+                    <input type="time" name="start_time" value="{{ $st_time }}" class="form-control @error('start_time') is-invalid @enderror">
+                    @error('start_time')
                     <div class="invalid-feedback">
                       {{ $message }}
                     </div>

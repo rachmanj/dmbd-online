@@ -42,7 +42,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label for="start_date">Start Date</label>
-                            <input type="date" name="start_date" value="{{ $breakdown->start_date }}" class="form-control" readonly>
+                            <input type="text" name="start_date" value="{{ date('d-m-Y H:i:s', strtotime($breakdown->start_date)) }}" class="form-control" readonly>
                         </div>
                     </div>
                     <div class="col-4">

@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('unit_code')->nullable();
             $table->string('status')->nullable();
             $table->string('priority')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
             $table->integer('hm')->nullable();
             $table->string('project')->nullable();
             $table->text('description')->nullable();

@@ -1,7 +1,10 @@
 <a href="{{ route('breakdowns.edit', $model->id) }}" class="btn btn-xs btn-warning"><i class="fas fa-edit"></i></a>
 <a href="{{ route('breakdowns.show', $model->id) }}" class="btn btn-xs btn-primary"><i class="fas fa-search"></i></a>
 <button data-toggle="modal" data-target="#update-status-{{ $model->id }}" class="btn btn-xs btn-success"><i class="fas fa-thumbs-up"></i></button>
-
+<form action="{{ route('breakdowns.destroy', $model->id) }}" method="POST">
+  @csrf @method('DELETE')
+  <button type="submit" class="btn btn-xs btn-danger" onclick="return alert('Are you sure?')"><i class="fas fa-trash"></i></button>
+</form>
 
 <div class="modal fade" id="update-status-{{ $model->id }}">
     <div class="modal-dialog modal-md">

@@ -1,0 +1,1 @@
+<div style="{{ now()->diffInDays($model->start_date) > 30 ? "color:red" : 'black' }}"> {{ $diff = now()->diffInDays($model->start_date) }} </div>

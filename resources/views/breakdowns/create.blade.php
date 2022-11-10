@@ -52,11 +52,22 @@
               </div>
   
               <div class="row">
-                <div class="col-6">
+                <div class="col-4">
                   <div class="form-group">
                     <label for="start_date">Start Date</label>
                     <input type="date" name="start_date" value="{{ old('start_date') }}" class="form-control @error('start_date') is-invalid @enderror">
                     @error('start_date')
+                    <div class="invalid-feedback">
+                      {{ $message }}
+                    </div>
+                    @enderror
+                  </div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <label for="start_time">Start Time</label>
+                    <input type="time" name="start_time" value="{{ old('start_time') }}" class="form-control @error('start_time') is-invalid @enderror">
+                    @error('start_time')
                     <div class="invalid-feedback">
                       {{ $message }}
                     </div>
@@ -102,11 +113,17 @@
   <!-- Select2 -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/daterangepicker/daterangepicker.css') }}">
+  <!-- daterange picker -->
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/daterangepicker/daterangepicker.css') }}">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
 @endsection
 
 @section('scripts')
 <!-- Select2 -->
 <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
+
 <script>
   $(function () {
     //Initialize Select2 Elements
@@ -115,4 +132,5 @@
     })
   }) 
 </script>
+
 @endsection

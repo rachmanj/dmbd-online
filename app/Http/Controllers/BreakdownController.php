@@ -25,7 +25,7 @@ class BreakdownController extends Controller
 
     public function store(Request $request)
     {
-        $validated_data = $request->validate([
+        $request->validate([
             'unit_code' => 'required',
             'priority' => 'required',
             'start_date' => 'required',
@@ -33,10 +33,15 @@ class BreakdownController extends Controller
             'description' => 'required',
         ]);
 
-        $breakdown = Breakdown::create(array_merge($validated_data, [
-            'status' => 'BD',
-            'created_by' => auth()->user()->username,
-        ]));
+        $breakdown = new Breakdown();
+        $breakdown->unit_code = $request->unit_code;
+        $breakdown->priority = $request->priority;
+        $breakdown->start_date = $request->start_date . ' ' . $request->start_time . ':00';
+        $breakdown->hm = $request->hm;
+        $breakdown->description = $request->description;
+        $breakdown->status = 'BD';
+        $breakdown->created_by = auth()->user()->username;
+        $breakdown->save();
 
         $breakdown->bd_no = 'BD/' . $breakdown->id;
         $breakdown->save();
@@ -50,12 +55,18 @@ class BreakdownController extends Controller
         $breakdown = Breakdown::findOrFail($id);
         $units = WoData::select('unit_code', 'unit_model')->distinct()->orderBy('unit_code', 'asc')->get();
         $priorities = Priority::orderBy('priority_code', 'asc')->get();
-        return view('breakdowns.edit', compact('units', 'breakdown', 'priorities'));
+        $st_date = date('Y-m-d', strtotime($breakdown->start_date));
+        $st_time = date('H:i:s', strtotime($breakdown->start_date));
+        // return $st_date;
+        // die;
+
+        return view('breakdowns.edit', compact('units', 'breakdown', 'priorities', 'st_date', 'st_time'));
     }
 
     public function update(Request $request, $id)
     {
-        $validated_data = $request->validate([
+
+        $request->validate([
             'unit_code' => 'required',
             'priority' => 'required',
             'start_date' => 'required',
@@ -64,7 +75,14 @@ class BreakdownController extends Controller
         ]);
 
         $breakdown = Breakdown::findOrFail($id);
-        $breakdown->update($validated_data);
+
+        $breakdown->unit_code = $request->unit_code;
+        $breakdown->priority = $request->priority;
+        $breakdown->start_date = $request->start_date . ' ' . $request->start_time . ':00';
+        $breakdown->hm = $request->hm;
+        $breakdown->description = $request->description;
+        $breakdown->created_by = auth()->user()->username;
+        $breakdown->save();
 
         return redirect()->route('breakdowns.index')
             ->with('success', 'Breakdown data updated successfully.');
@@ -75,7 +93,9 @@ class BreakdownController extends Controller
         $breakdown = Breakdown::findOrFail($id);
         $unit_model = WoData::where('unit_code', $breakdown->unit_code)->first()->unit_model;
         $wos = WoData::where('unit_code', $breakdown->unit_code)->orderBy('wo_date', 'asc')->get();
-        return view('breakdowns.show', compact('breakdown', 'wos', 'unit_model'));
+        $st_date = date('Y-m-d', strtotime($breakdown->start_date));
+        $st_time = date('H:i:s', strtotime($breakdown->start_date));
+        return view('breakdowns.show', compact('breakdown', 'wos', 'unit_model', 'st_date', 'st_time'));
     }
 
     public function update_status(Request $request, $id)
@@ -95,6 +115,15 @@ class BreakdownController extends Controller
             ->with('success', $breakdown->unit_no . ' status now RFU.');
     }
 
+    public function destroy($id)
+    {
+        $breakdown = Breakdown::findOrFail($id);
+        $breakdown->delete();
+
+        return redirect()->route('breakdowns.index')
+            ->with('success', 'Breakdown data deleted successfully.');
+    }
+
     public function data()
     {
         $list = Breakdown::where('status', 'bd')->orderBy('start_date', 'asc')->get();
@@ -102,24 +131,25 @@ class BreakdownController extends Controller
         return datatables()->of($list)
             ->editColumn('start_date', function ($list) {
                 if ($list->start_date) {
-                    return date('d-m-Y', strtotime($list->start_date));
+                    return date('d-m-Y H:i:s', strtotime($list->start_date));
                 } else {
                     return '-';
                 }
             })
-            ->addColumn('days', function ($list) {
-                if ($list->start_date) {
-                    $start_date = new \DateTime($list->start_date);
-                    $now = new \DateTime();
-                    $diff = $start_date->diff($now);
-                    return $diff->days;
-                } else {
-                    return '-';
-                }
-            })
+            // ->addColumn('days', function ($list) {
+            //     if ($list->start_date) {
+            //         $start_date = new \DateTime($list->start_date);
+            //         $now = new \DateTime();
+            //         $diff = $start_date->diff($now);
+            //         return $diff->days;
+            //     } else {
+            //         return '-';
+            //     }
+            // })
             ->addIndexColumn()
             ->addColumn('action', 'breakdowns.action')
-            ->rawColumns(['action'])
+            ->addColumn('days', 'breakdowns.days')
+            ->rawColumns(['action', 'days'])
             ->toJson();
     }
 
