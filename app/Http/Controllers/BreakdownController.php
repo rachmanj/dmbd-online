@@ -126,7 +126,7 @@ class BreakdownController extends Controller
     public function wo_data($id)
     {
         $breakdown = Breakdown::findOrFail($id);
-        $unit_wos = WoData::where('unit_code', $breakdown->unit_code)->orderBy('wo_date', 'asc')->get();
+        $unit_wos = WoData::where('unit_code', $breakdown->unit_code)->orderBy('wo_date', 'asc')->distinct()->get(['wo_no', 'project', 'wo_date', 'wo_status', 'unit_code', 'status_position']);
 
         return datatables()->of($unit_wos)
             ->editColumn('wo_date', function ($unit_wos) {
