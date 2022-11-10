@@ -10,14 +10,29 @@
     <div class="modal-dialog modal-md">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>Change {{ $model->unit_no }} Status to RFU</h3>
+          <h3>Change {{ $model->unit_code }} Status to RFU</h3>
         </div>
         <form action="{{ route('breakdowns.update_status', $model->id) }}" method="POST">
           @csrf @method('PUT')
           <div class="modal-body">
-            <div class="form-group">
-              <label for="rfu_date">RFU Date <small>(biarkan kosong jika tanggal hari ini)</small></label>
-              <input type="date" name="rfu_date" class="form-control">
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="rfu_date">RFU Date</label>
+                  <input type="date" name="rfu_date" class="form-control">
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <label for="rfu_time">Time </label>
+                  <input type="time" name="rfu_time" class="form-control @error('rfu_time') is-invalid @enderror">
+                  @error('rfu_time')
+                    <div class="invalid-feedback">
+                      {{ $message }}
+                    </div>
+                  @enderror
+                </div>
+              </div>
             </div>
           </div>
           <div class="modal-footer justify-content-between">

@@ -101,9 +101,13 @@ class BreakdownController extends Controller
     public function update_status(Request $request, $id)
     {
         if ($request->rfu_date) {
-            $rfu_date = $request->rfu_date;
+            $request->validate([
+                'rfu_time' => 'required',
+            ]);
+            $rfu_date = $request->start_date . ' ' . $request->start_time . ':00';
         } else {
-            $rfu_date = date('Y-m-d');
+            $time = date('H:i:s', time() + 28800);
+            $rfu_date = date('Y-m-d') . ' ' . $time;
         }
 
         $breakdown = Breakdown::findOrFail($id);
@@ -136,16 +140,6 @@ class BreakdownController extends Controller
                     return '-';
                 }
             })
-            // ->addColumn('days', function ($list) {
-            //     if ($list->start_date) {
-            //         $start_date = new \DateTime($list->start_date);
-            //         $now = new \DateTime();
-            //         $diff = $start_date->diff($now);
-            //         return $diff->days;
-            //     } else {
-            //         return '-';
-            //     }
-            // })
             ->addIndexColumn()
             ->addColumn('action', 'breakdowns.action')
             ->addColumn('days', 'breakdowns.days')

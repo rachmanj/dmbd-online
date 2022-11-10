@@ -86,12 +86,6 @@
           {data: 'description'},
           {data: 'action'},
         ],
-        // rowCallback: function(row, data, index)
-        // {
-        // if(data.days > 30) {
-        //   $(row).css('color','red')
-        //     }
-        // },
         fixedHeader: true,
         columnDefs: [
               {
