@@ -34,8 +34,9 @@
           <thead>
           <tr>
             <th>No</th>
-            <th>BD No</th>
+            {{-- <th>BD No</th> --}}
             <th>Unit No</th>
+            <th>Project</th>
             <th>Start Date</th>
             <th>Days</th>
             <th>Description</th>
@@ -79,8 +80,9 @@
         ajax: '{{ route('breakdowns.data') }}',
         columns: [
           {data: 'DT_RowIndex', orderable: false, searchable: false},
-          {data: 'bd_no'},
+          // {data: 'bd_no'},
           {data: 'unit_code'},
+          {data: 'project'},
           {data: 'start_date'},
           {data: 'days'},
           {data: 'description'},

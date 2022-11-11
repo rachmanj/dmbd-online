@@ -28,7 +28,7 @@
                     <select name="unit_code" id="unit_code" class="form-control select2bs4 @error('unit_code') is-invalid @enderror">
                       <option value="">-- select Unit No --</option>
                       @foreach ($units as $unit)
-                          <option value="{{ $unit->unit_code }}" {{ $unit->unit_code === $breakdown->unit_code ? 'selected' : '' }}>{{ $unit->unit_code . ' - ' . $unit->unit_model }}</option>
+                          <option value="{{ $unit['unit_code'] }}" {{ $unit['unit_code'] === $breakdown->unit_code ? 'selected' : '' }}>{{ $unit['unit_code'] . ' - ' . $unit['plant_group'] . ' - ' . $unit['model'] }}</option>
                       @endforeach
                     </select>
                     @error('unit_no')

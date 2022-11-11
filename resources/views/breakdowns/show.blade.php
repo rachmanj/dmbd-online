@@ -27,8 +27,11 @@
                             <input type="text" name="unit_code" value="{{ $breakdown->unit_code . ' - ' . $unit_model }}" class="form-control" readonly>
                         </div>
                     </div>
-                    <div class="col-6">
-                        
+                    <div class="col-4">
+                      <div class="form-group">
+                        <label for="project">Project</label>
+                        <input type="text" name="project" value="{{ $breakdown->project }}" class="form-control" readonly>
+                    </div>
                     </div>
                 </div>
   

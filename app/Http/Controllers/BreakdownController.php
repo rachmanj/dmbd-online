@@ -6,6 +6,7 @@ use App\Models\Breakdown;
 use App\Models\Priority;
 use App\Models\WoData;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class BreakdownController extends Controller
 {
@@ -16,9 +17,13 @@ class BreakdownController extends Controller
 
     public function create()
     {
+        // send request to API
+        $response = Http::get('http://192.168.33.18:8080/ark-fleet/api/equipments');
+        $units = $response['data'];
+
         // $units = ['E 021', 'E 022', 'DZ 103', 'RD 054'];
         // select unit_code from WoData and distinct
-        $units = WoData::select('unit_code', 'unit_model')->distinct()->orderBy('unit_code', 'asc')->get();
+        // $units = WoData::select('unit_code', 'unit_model')->distinct()->orderBy('unit_code', 'asc')->get();
 
         return view('breakdowns.create', compact('units'));
     }
@@ -33,11 +38,18 @@ class BreakdownController extends Controller
             'description' => 'required',
         ]);
 
+        // send request to API
+        $response = Http::get('http://192.168.33.18:8080/ark-fleet/api/equipments');
+        $units = collect($response->json()['data']);
+        $breakdown_unit = $units->where('unit_code', $request->unit_code)->first();
+        $project = $breakdown_unit['project'];
+
         $breakdown = new Breakdown();
         $breakdown->unit_code = $request->unit_code;
         $breakdown->priority = $request->priority;
         $breakdown->start_date = $request->start_date . ' ' . $request->start_time . ':00';
         $breakdown->hm = $request->hm;
+        $breakdown->project = $project;
         $breakdown->description = $request->description;
         $breakdown->status = 'BD';
         $breakdown->created_by = auth()->user()->username;
@@ -52,13 +64,16 @@ class BreakdownController extends Controller
 
     public function edit($id)
     {
+        // send request to API
+        $response = Http::get('http://192.168.33.18:8080/ark-fleet/api/equipments');
+        $units = $response['data'];
+
         $breakdown = Breakdown::findOrFail($id);
-        $units = WoData::select('unit_code', 'unit_model')->distinct()->orderBy('unit_code', 'asc')->get();
+        // $units = WoData::select('unit_code', 'unit_model')->distinct()->orderBy('unit_code', 'asc')->get();
+
         $priorities = Priority::orderBy('priority_code', 'asc')->get();
         $st_date = date('Y-m-d', strtotime($breakdown->start_date));
         $st_time = date('H:i:s', strtotime($breakdown->start_date));
-        // return $st_date;
-        // die;
 
         return view('breakdowns.edit', compact('units', 'breakdown', 'priorities', 'st_date', 'st_time'));
     }
@@ -76,10 +91,17 @@ class BreakdownController extends Controller
 
         $breakdown = Breakdown::findOrFail($id);
 
+        // send request to API
+        $response = Http::get('http://192.168.33.18:8080/ark-fleet/api/equipments');
+        $units = collect($response->json()['data']);
+        $breakdown_unit = $units->where('unit_code', $request->unit_code)->first();
+        $project = $breakdown_unit['project'];
+
         $breakdown->unit_code = $request->unit_code;
         $breakdown->priority = $request->priority;
-        $breakdown->start_date = $request->start_date . ' ' . $request->start_time . ':00';
+        $breakdown->start_date = $request->start_date . ' ' . $request->start_time;
         $breakdown->hm = $request->hm;
+        $breakdown->project = $project;
         $breakdown->description = $request->description;
         $breakdown->created_by = auth()->user()->username;
         $breakdown->save();
