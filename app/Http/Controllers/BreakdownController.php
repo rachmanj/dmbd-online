@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Breakdown;
+use App\Models\BreakdownAction;
 use App\Models\Priority;
 use App\Models\WoData;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -17,13 +19,8 @@ class BreakdownController extends Controller
 
     public function create()
     {
-        // send request to API
-        $response = Http::get('http://192.168.33.18:8080/ark-fleet/api/equipments');
+        $response = Http::get(env('EQUIPMENTS_URL'));
         $units = $response['data'];
-
-        // $units = ['E 021', 'E 022', 'DZ 103', 'RD 054'];
-        // select unit_code from WoData and distinct
-        // $units = WoData::select('unit_code', 'unit_model')->distinct()->orderBy('unit_code', 'asc')->get();
 
         return view('breakdowns.create', compact('units'));
     }
@@ -38,8 +35,7 @@ class BreakdownController extends Controller
             'description' => 'required',
         ]);
 
-        // send request to API
-        $response = Http::get('http://192.168.33.18:8080/ark-fleet/api/equipments');
+        $response = Http::get(env('EQUIPMENTS_URL'));
         $units = collect($response->json()['data']);
         $breakdown_unit = $units->where('unit_code', $request->unit_code)->first();
         $project = $breakdown_unit['project'];
@@ -64,8 +60,7 @@ class BreakdownController extends Controller
 
     public function edit($id)
     {
-        // send request to API
-        $response = Http::get('http://192.168.33.18:8080/ark-fleet/api/equipments');
+        $response = Http::get(env('EQUIPMENTS_URL'));
         $units = $response['data'];
 
         $breakdown = Breakdown::findOrFail($id);
@@ -91,8 +86,7 @@ class BreakdownController extends Controller
 
         $breakdown = Breakdown::findOrFail($id);
 
-        // send request to API
-        $response = Http::get('http://192.168.33.18:8080/ark-fleet/api/equipments');
+        $response = Http::get(env('EQUIPMENTS_URL'));
         $units = collect($response->json()['data']);
         $breakdown_unit = $units->where('unit_code', $request->unit_code)->first();
         $project = $breakdown_unit['project'];
@@ -113,11 +107,11 @@ class BreakdownController extends Controller
     public function show($id)
     {
         $breakdown = Breakdown::findOrFail($id);
-        $unit_model = WoData::where('unit_code', $breakdown->unit_code)->first()->unit_model;
+        $unit_breakdown = WoData::where('unit_code', $breakdown->unit_code)->first(); //get unit yg breakdown
         $wos = WoData::where('unit_code', $breakdown->unit_code)->orderBy('wo_date', 'asc')->get();
         $st_date = date('Y-m-d', strtotime($breakdown->start_date));
         $st_time = date('H:i:s', strtotime($breakdown->start_date));
-        return view('breakdowns.show', compact('breakdown', 'wos', 'unit_model', 'st_date', 'st_time'));
+        return view('breakdowns.show', compact('breakdown', 'wos', 'unit_breakdown', 'st_date', 'st_time'));
     }
 
     public function update_status(Request $request, $id)
@@ -148,6 +142,67 @@ class BreakdownController extends Controller
 
         return redirect()->route('breakdowns.index')
             ->with('success', 'Breakdown data deleted successfully.');
+    }
+
+    public function add_action($id) // $id = breakdown->id
+    {
+        $breakdown = Breakdown::findOrFail($id);
+        $unit_breakdown = WoData::where('unit_code', $breakdown->unit_code)->first(); //get unit yg breakdown
+        $actions = BreakdownAction::where('breakdown_id', $id)->orderBy('start_date', 'asc')->get();
+
+        return view('breakdowns.add_action', compact('breakdown', 'unit_breakdown', 'actions'));
+    }
+
+    public function store_new_action(Request $request, $id)
+    {
+        $request->validate([
+            'action' => 'required',
+        ]);
+
+        $action = new BreakdownAction();
+        $action->breakdown_id = $id;
+        $action->action = $request->action;
+        if ($request->start_date) {
+            $action->start_date = $request->start_date . ' ' . $request->start_time . ':00';
+        } else {
+            $action->start_date = null;
+        }
+        $action->created_by = auth()->user()->username;
+        $action->save();
+
+        return redirect()->route('breakdowns.add_action', $id)
+            ->with('success', 'Breakdown action added successfully.');
+    }
+
+    public function update_action(Request $request, $action_id)
+    {
+        $action = BreakdownAction::findOrFail($action_id);
+        $action->action = $request->action;
+        $action->start_date = $request->start_date . ' ' . $request->start_time;
+        if ($request->end_date) {
+            if ($action->end_date) {
+                $action->end_date = $request->end_date . ' ' . $request->end_time;
+            } else {
+                $action->end_date = $request->end_date . ' ' . $request->end_time . ':00';
+            }
+        } else {
+            $action->end_date = null;
+        }
+        $action->status_updated_by = auth()->user()->username;
+        $action->save();
+
+        return redirect()->route('breakdowns.add_action', $action->breakdown_id)
+            ->with('success', 'Breakdown action updated successfully.');
+    }
+
+    public function delete_action($action_id)
+    {
+        $action = BreakdownAction::findOrFail($action_id);
+        $breakdown_id = $action->breakdown_id;
+        $action->delete();
+
+        return redirect()->route('breakdowns.add_action', $breakdown_id)
+            ->with('success', 'Breakdown action deleted successfully.');
     }
 
     public function data()
@@ -193,6 +248,50 @@ class BreakdownController extends Controller
                 }
             })
             ->addIndexColumn()
+            ->toJson();
+    }
+
+    public function action_data($id)
+    {
+        $actions = BreakdownAction::where('breakdown_id', $id)->orderBy('start_date', 'asc')->get();
+
+        return datatables()->of($actions)
+            ->editColumn('action', function ($actions) {
+                if ($actions->end_date) {
+                    return $actions->action . ' <span class="badge badge-success"> Done</span>';
+                } else {
+                    return $actions->action;
+                }
+            })
+            ->editColumn('start_date', function ($actions) {
+                if ($actions->start_date) {
+                    return date('d-m-Y H:i:s', strtotime($actions->start_date));
+                } else {
+                    return '-';
+                }
+            })
+            ->editColumn('end_date', function ($actions) {
+                if ($actions->end_date) {
+                    return date('d-m-Y H:i:s', strtotime($actions->end_date));
+                } else {
+                    return '-';
+                }
+            })
+            ->addColumn('duration', function ($list) {
+                if ($list->start_date && $list->end_date) {
+                    $end_date = Carbon::createFromFormat('Y-m-d H:s:i', $list->end_date);
+                    $start_date = Carbon::createFromFormat('Y-m-d H:s:i', $list->start_date);
+                    $days = $start_date->diffInDays($end_date);
+                    $hours = $start_date->copy()->addDays($days)->diffInHours($end_date);
+                    $minutes = $start_date->copy()->addDays($days)->addHours($hours)->diffInMinutes($end_date);
+                    return $days . 'd ' . $hours . 'h ' . $minutes . 'm';
+                } else {
+                    return '-';
+                }
+            })
+            ->addIndexColumn()
+            ->addColumn('opsi', 'breakdowns.breakdown_action')
+            ->rawColumns(['action', 'opsi'])
             ->toJson();
     }
 }

@@ -48,7 +48,12 @@ Route::middleware('auth')->group(function () {
     Route::prefix('breakdowns')->name('breakdowns.')->group(function () {
         Route::get('/data', [BreakdownController::class, 'data'])->name('data');
         Route::get('/{id}/wo-data', [BreakdownController::class, 'wo_data'])->name('wo_data');
+        Route::get('/{id}/action-data', [BreakdownController::class, 'action_data'])->name('action_data');
         Route::put('/{id}/update-status', [BreakdownController::class, 'update_status'])->name('update_status');
+        Route::get('/{id}/add-action', [BreakdownController::class, 'add_action'])->name('add_action');
+        Route::post('/{id}/add-action', [BreakdownController::class, 'store_new_action'])->name('store_new_action');
+        Route::put('/{action_id}/update-action', [BreakdownController::class, 'update_action'])->name('update_action');
+        Route::delete('/{action_id}/delete-action', [BreakdownController::class, 'delete_action'])->name('delete_action');
     });
     Route::resource('breakdowns', BreakdownController::class);
 

@@ -35,7 +35,7 @@ class WoDataController extends Controller
         Excel::import(new WoDataImport, public_path('/file_upload/' . $nama_file));
 
         // alihkan halaman kembali
-        return redirect()->route('wo-data.index')->with('status', 'Data Berhasil Diimport!');
+        return redirect()->route('wo-data.index')->with('success', 'Table successfully uploaded!');
     }
 
     public function show($id)

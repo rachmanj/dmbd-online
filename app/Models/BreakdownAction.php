@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Breakdown extends Model
+class BreakdownAction extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
-    public function breakdownActions()
+    public function breakdown()
     {
-        return $this->hasMany(BreakdownAction::class);
+        return $this->belongsTo(Breakdown::class);
     }
 }

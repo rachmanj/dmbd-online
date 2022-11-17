@@ -1,9 +1,10 @@
-<a href="{{ route('breakdowns.edit', $model->id) }}" class="btn btn-xs btn-warning"><i class="fas fa-edit"></i></a>
-<a href="{{ route('breakdowns.show', $model->id) }}" class="btn btn-xs btn-primary"><i class="fas fa-search"></i></a>
-<button data-toggle="modal" data-target="#update-status-{{ $model->id }}" class="btn btn-xs btn-success"><i class="fas fa-thumbs-up"></i></button>
+<a href="{{ route('breakdowns.edit', $model->id) }}" class="btn btn-xs btn-warning" data-toggle="tooltip" data-placement="top" title="Edit Data"><i class="fas fa-edit"></i></a>
+<a href="{{ route('breakdowns.show', $model->id) }}" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Show Detail"><i class="fas fa-search"></i></a>
+<button data-toggle="modal" data-target="#update-status-{{ $model->id }}" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" title="Change Status to RFU"><i class="fas fa-thumbs-up"></i></button>
+<a href="{{ route('breakdowns.add_action', $model->id) }}" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Add Actions"><i class="fas fa-folder"></i></a>
 <form action="{{ route('breakdowns.destroy', $model->id) }}" method="POST">
   @csrf @method('DELETE')
-  <button type="submit" class="btn btn-xs btn-danger" onclick="return alert('Are you sure?')"><i class="fas fa-trash"></i></button>
+  <button type="submit" class="btn btn-xs btn-danger" onclick="return alert('Are you sure?')" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>
 </form>
 
 <div class="modal fade" id="update-status-{{ $model->id }}">

@@ -98,6 +98,13 @@
       })
     });
   </script>
+
+  <script>
+    // tooltip
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
   
 
 @endsection
