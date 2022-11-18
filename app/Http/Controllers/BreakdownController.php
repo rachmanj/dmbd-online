@@ -17,6 +17,17 @@ class BreakdownController extends Controller
         return view('breakdowns.index');
     }
 
+    public function timeline()
+    {
+        $response = Http::get(env('EQUIPMENTS_URL'));
+        $units = collect($response->json()['data']);
+
+        $breakdowns = Breakdown::where('status', 'bd')->orderBy('start_date', 'asc')->get();
+        $wos = WoData::orderBy('wo_no', 'asc')->distinct()->get(['wo_no', 'unit_code']);
+
+        return view('breakdowns.index_timeline', compact('breakdowns', 'units', 'wos'));
+    }
+
     public function create()
     {
         $response = Http::get(env('EQUIPMENTS_URL'));
@@ -107,7 +118,11 @@ class BreakdownController extends Controller
     public function show($id)
     {
         $breakdown = Breakdown::findOrFail($id);
-        $unit_breakdown = WoData::where('unit_code', $breakdown->unit_code)->first(); //get unit yg breakdown
+
+        $response = Http::get(env('EQUIPMENTS_URL'));
+        $units = collect($response->json()['data']);
+        $unit_breakdown = $units->where('unit_code', $breakdown->unit_code)->first();
+
         $wos = WoData::where('unit_code', $breakdown->unit_code)->orderBy('wo_date', 'asc')->get();
         $st_date = date('Y-m-d', strtotime($breakdown->start_date));
         $st_time = date('H:i:s', strtotime($breakdown->start_date));
@@ -220,7 +235,8 @@ class BreakdownController extends Controller
             ->addIndexColumn()
             ->addColumn('action', 'breakdowns.action')
             ->addColumn('days', 'breakdowns.days')
-            ->rawColumns(['action', 'days'])
+            ->addColumn('info', 'breakdowns.info')
+            ->rawColumns(['action', 'days', 'info'])
             ->toJson();
     }
 

@@ -1,0 +1,1 @@
+<p>Project: {{ $model->project }}</p>

@@ -14,19 +14,8 @@
 
     <div class="card">
       <div class="card-header">
-        @if (Session::has('success'))
-          <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            {{ Session::get('success') }}
-          </div>
-        @endif
-        @if (Session::has('error'))
-          <div class="alert alert-danger alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            {{ Session::get('error') }}
-          </div>
-        @endif
-        <a href="{{ route('breakdowns.create') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Breakdown Data</a>
+        <b>Table Look</b> | <a href="{{ route('breakdowns.timeline') }}">Timeline Look</a>
+        <a href="{{ route('breakdowns.create') }}" class="btn btn-sm btn-primary float-right"><i class="fas fa-plus"></i> Breakdown Data</a>
       </div>
       <!-- /.card-header -->
       <div class="card-body">
@@ -34,8 +23,9 @@
           <thead>
           <tr>
             <th>No</th>
-            {{-- <th>BD No</th> --}}
+            <th>BD No</th>
             <th>Unit No</th>
+            {{-- <th>Info</th> --}}
             <th>Project</th>
             <th>Start Date</th>
             <th>Days</th>
@@ -80,8 +70,9 @@
         ajax: '{{ route('breakdowns.data') }}',
         columns: [
           {data: 'DT_RowIndex', orderable: false, searchable: false},
-          // {data: 'bd_no'},
+          {data: 'bd_no'},
           {data: 'unit_code'},
+          // {data: 'info'},
           {data: 'project'},
           {data: 'start_date'},
           {data: 'days'},
@@ -89,12 +80,6 @@
           {data: 'action'},
         ],
         fixedHeader: true,
-        columnDefs: [
-              {
-                "targets": [4],
-                "className": "text-right"
-              }
-            ]
       })
     });
   </script>

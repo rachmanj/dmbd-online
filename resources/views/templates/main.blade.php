@@ -4,11 +4,12 @@
 <head>
   
   @include('templates.partials.head')
-
+  
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
-
+  <div class="wrapper">
+    
+    @include('sweetalert::alert')
   <!-- Navbar -->
     @include('templates.partials.navbar')
   <!-- /.navbar -->

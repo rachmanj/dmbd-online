@@ -24,7 +24,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="unit_code">Unit No</label>
-                            <input type="text" name="unit_code" value="{{ $breakdown->unit_code . ' - ' . $unit_breakdown->unit_type . ' - ' . $unit_breakdown->unit_model }}" class="form-control" readonly>
+                            <input type="text" name="unit_code" value="{{ $breakdown->unit_code . ' - ' . $unit_breakdown['plant_group'] . ' - ' . $unit_breakdown['model'] }}" class="form-control" readonly>
                         </div>
                     </div>
                     <div class="col-4">

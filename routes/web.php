@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/add-action', [BreakdownController::class, 'store_new_action'])->name('store_new_action');
         Route::put('/{action_id}/update-action', [BreakdownController::class, 'update_action'])->name('update_action');
         Route::delete('/{action_id}/delete-action', [BreakdownController::class, 'delete_action'])->name('delete_action');
+        Route::get('/timeline', [BreakdownController::class, 'timeline'])->name('timeline');
     });
     Route::resource('breakdowns', BreakdownController::class);
 
