@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Breakdown;
 use App\Models\BreakdownAction;
+use App\Models\BreakdownCode;
 use App\Models\Priority;
 use App\Models\WoData;
 use Carbon\Carbon;
@@ -32,8 +33,9 @@ class BreakdownController extends Controller
     {
         $response = Http::get(env('EQUIPMENTS_URL'));
         $units = $response['data'];
+        $bd_codes = BreakdownCode::orderBy('code', 'asc')->get();
 
-        return view('breakdowns.create', compact('units'));
+        return view('breakdowns.create', compact('units', 'bd_codes'));
     }
 
     public function store(Request $request)
@@ -56,6 +58,7 @@ class BreakdownController extends Controller
         $breakdown->priority = $request->priority;
         $breakdown->start_date = $request->start_date . ' ' . $request->start_time . ':00';
         $breakdown->hm = $request->hm;
+        $breakdown->bd_code = $request->bd_code;
         $breakdown->project = $project;
         $breakdown->description = $request->description;
         $breakdown->status = 'BD';
@@ -73,6 +76,7 @@ class BreakdownController extends Controller
     {
         $response = Http::get(env('EQUIPMENTS_URL'));
         $units = $response['data'];
+        $bd_codes = BreakdownCode::orderBy('code', 'asc')->get();
 
         $breakdown = Breakdown::findOrFail($id);
         // $units = WoData::select('unit_code', 'unit_model')->distinct()->orderBy('unit_code', 'asc')->get();
@@ -81,7 +85,7 @@ class BreakdownController extends Controller
         $st_date = date('Y-m-d', strtotime($breakdown->start_date));
         $st_time = date('H:i:s', strtotime($breakdown->start_date));
 
-        return view('breakdowns.edit', compact('units', 'breakdown', 'priorities', 'st_date', 'st_time'));
+        return view('breakdowns.edit', compact('units', 'breakdown', 'priorities', 'st_date', 'st_time', 'bd_codes'));
     }
 
     public function update(Request $request, $id)
@@ -106,6 +110,7 @@ class BreakdownController extends Controller
         $breakdown->priority = $request->priority;
         $breakdown->start_date = $request->start_date . ' ' . $request->start_time;
         $breakdown->hm = $request->hm;
+        $breakdown->bd_code = $request->bd_code;
         $breakdown->project = $project;
         $breakdown->description = $request->description;
         $breakdown->created_by = auth()->user()->username;

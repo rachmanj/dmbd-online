@@ -80,6 +80,12 @@
           {data: 'action'},
         ],
         fixedHeader: true,
+        columnDefs: [
+              {
+                "targets": [5],
+                "className": "text-right"
+              }
+            ]
       })
     });
   </script>

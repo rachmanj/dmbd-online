@@ -10,7 +10,7 @@
 
 @section('content')
     <div class="row">
-      <div class="col-10">
+      <div class="col-12">
 
         <div class="card">
           <div class="card-header">
@@ -38,12 +38,23 @@
                     @enderror
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-3">
                   <div class="form-group">
                     <label for="priority">Priority</label>
                     <select name="priority" id="priority" class="form-control">
                       @foreach ($priorities as $priority)
                           <option value="{{ $priority->priority_code }}" {{ $priority->priority_code === $breakdown->priority ? 'selected' : '' }}>{{ $priority->priority_code }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="form-group">
+                    <label for="bd_code">Breakdown Code</label>
+                    <select name="bd_code" id="bd_code" class="form-control">
+                      <option value="tba">-- select BD Code --</option>
+                      @foreach ($bd_codes as $bd_code)
+                          <option value="{{ $bd_code->code }}" {{ $bd_code->code === $breakdown->bd_code ? 'selected' : '' }}>{{ $bd_code->code }}</option>
                       @endforeach
                     </select>
                   </div>

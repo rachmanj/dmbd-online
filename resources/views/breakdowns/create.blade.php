@@ -38,7 +38,7 @@
                     @enderror
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-3">
                   <div class="form-group">
                     <label for="priority">Priority</label>
                     <select name="priority" id="priority" class="form-control">
@@ -46,6 +46,17 @@
                       <option value="P1">P1</option>
                       <option value="P2">P2</option>
                       <option value="P3">P3</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="form-group">
+                    <label for="bd_code">Breakdown Code</label>
+                    <select name="bd_code" id="bd_code" class="form-control">
+                      <option value="tba">-- select BD Code --</option>
+                      @foreach ($bd_codes as $bd_code)
+                          <option value="{{ $bd_code->code }}">{{ $bd_code->code }}</option>
+                      @endforeach
                     </select>
                   </div>
                 </div>

@@ -10,16 +10,35 @@
     <div>
         {{-- <i class="fas fa-envelope bg-blue"></i> --}}
         <div class="timeline-item">
-            <span class="time"></span>
+            <span class="time">Created by : {{ $breakdown->created_by }} at {{ date('d-m-Y H:i:s', strtotime($breakdown->created_at)) }}</span>
             <div class="timeline-header">
                 <h5><a href="#">{{ $units->where('unit_code', $breakdown->unit_code)->first()['plant_group'] }} - {{ $units->where('unit_code', $breakdown->unit_code)->first()['model'] }} | {{ $breakdown->project }} </a> | <i class="fas fa-clock"></i> {{ date('d-m-Y H:i:s', strtotime($breakdown->start_date)) }}</h5>
             </div>
 
             <div class="timeline-body">
-                {{ $breakdown->description }}
-                <br>
+                <div class="row">
+                    <div class="col-12">
+                        {{ $breakdown->description }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-4">
-                    <ul class="list-group list-group-unbordered mb-3">
+                    <ul class="list-group list-group-unbordered mb-3 ml-3">
+                        <li class="list-group-item">
+                          <b>Status:</b> <a class="float-right">{{ $breakdown->status }}</a>
+                        </li>
+                        <li class="list-group-item">
+                          <b>Priority</b> <a class="float-right">{{ $breakdown->priority }}</a>
+                        </li>
+                        <li class="list-group-item">
+                          <b>BD Code</b> <a class="float-right">{{ $breakdown->bd_code }}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-4">
+                    <ul class="list-group list-group-unbordered mb-3 mr-3">
                         <li class="list-group-item">
                           <b>WO Open:</b> <a class="float-right">{{ $wos->where('unit_code', $breakdown->unit_code)->count() }} WOs</a>
                         </li>
@@ -31,7 +50,9 @@
                         </li>
                     </ul>
                 </div>
-
+                <div class="col-4">
+                    
+                </div>
             </div>
     
             {{-- <div class="timeline-footer">
