@@ -14,34 +14,35 @@
 
         <div class="card">
           <div class="card-header">
-            <h1 class="card-title"><b>Unit No: {{ $breakdown->unit_code }}</b></h1>
+            <h1 class="card-title"><b>Unit No: {{ $breakdown->unit_code . ' | ' . $breakdown->plant_group . ' | ' . $breakdown->unit_model }}</b></h1>
             <a href="{{ route('breakdowns.index') }}" class="btn btn-sm btn-primary float-right"><i class="fas fa-undo"></i> Back</a>
           </div>
           <div class="card-body">
             <form>
 
                 <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="unit_code">Unit No</label>
-                            <input type="text" name="unit_code" value="{{ $breakdown->unit_code . ' - ' . $unit_breakdown['plant_group'] . ' - ' . $unit_breakdown['model'] }}" class="form-control" readonly>
-                        </div>
-                    </div>
-                    <div class="col-4">
+                    
+                    <div class="col-2">
                       <div class="form-group">
                         <label for="project">Project</label>
                         <input type="text" name="project" value="{{ $breakdown->project }}" class="form-control" readonly>
+                      </div>
                     </div>
+                    <div class="col-2">
+                      <div class="form-group">
+                        <label for="priority">Priority</label>
+                        <input type="text" name="priority" value="{{ $breakdown->priority }}" class="form-control" readonly>
+                      </div>
+                    </div>
+                    <div class="col-2">
+                      <div class="form-group">
+                        <label for="bd_code">BD Code</label>
+                        <input type="text" name="bd_code" value="{{ $breakdown->bd_code }}" class="form-control" readonly>
+                      </div>
                     </div>
                 </div>
   
                 <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="priority">Priority</label>
-                            <input type="text" name="priority" value="{{ $breakdown->priority }}" class="form-control" readonly>
-                        </div>
-                    </div>
                     <div class="col-4">
                         <div class="form-group">
                             <label for="start_date">Start Date</label>
@@ -53,6 +54,12 @@
                             <label for="hm">HM</label>
                             <input type="text" name="hm" value="{{ $breakdown->hm }}" class="form-control" readonly>
                         </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="form-group">
+                        <label for="hm">Created by</label>
+                        <input type="text" name="hm" value="{{ $breakdown->created_by . ' at ' . date('d-m-Y H:i:s', strtotime('+8 hours', strtotime($breakdown->created_at))) }}" class="form-control" readonly>
+                    </div>
                     </div>
                 </div>
 

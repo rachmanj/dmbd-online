@@ -10,9 +10,9 @@
     <div>
         {{-- <i class="fas fa-envelope bg-blue"></i> --}}
         <div class="timeline-item">
-            <span class="time">Created by : {{ $breakdown->created_by }} at {{ date('d-m-Y H:i:s', strtotime($breakdown->created_at)) }}</span>
+            <span class="time">Created by : {{ $breakdown->created_by }} at {{ date('d-m-Y H:i:s', strtotime('+8 hours', strtotime($breakdown->created_at))) }}</span>
             <div class="timeline-header">
-                <h5><a href="#">{{ $units->where('unit_code', $breakdown->unit_code)->first()['plant_group'] }} - {{ $units->where('unit_code', $breakdown->unit_code)->first()['model'] }} | {{ $breakdown->project }} </a> | <i class="fas fa-clock"></i> {{ date('d-m-Y H:i:s', strtotime($breakdown->start_date)) }}</h5>
+                <h5>{{ $breakdown->plant_group }} - {{ $breakdown->unit_model }} | {{ $breakdown->project }} | start date: {{ date('d-m-Y H:i:s', strtotime($breakdown->start_date)) }}</h5>
             </div>
 
             <div class="timeline-body">

@@ -38,6 +38,28 @@
                     @enderror
                   </div>
                 </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <label for="plant_group">Plant Group</label>
+                    <input type="text" name="plant_group" id="plant_group" class="form-control" readonly>
+                  </div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <label for="unit_model">Model</label>
+                    <input type="text" name="unit_model" id="unit_model" class="form-control" readonly>
+                  </div>
+                </div>
+                <div class="col-2">
+                  <div class="form-group">
+                    <label for="project">Project</label>
+                    <input type="text" name="project" id="project" class="form-control" readonly>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="row">
                 <div class="col-3">
                   <div class="form-group">
                     <label for="priority">Priority</label>
@@ -53,7 +75,7 @@
                   <div class="form-group">
                     <label for="bd_code">Breakdown Code</label>
                     <select name="bd_code" id="bd_code" class="form-control">
-                      <option value="tba">-- select BD Code --</option>
+                      <option value="">-- select BD Code --</option>
                       @foreach ($bd_codes as $bd_code)
                           <option value="{{ $bd_code->code }}">{{ $bd_code->code }}</option>
                       @endforeach
@@ -95,7 +117,7 @@
                       </div>
                       @enderror
                     </div>
-                  </div>
+                </div>
                 
               </div>
 
@@ -135,6 +157,24 @@
 <!-- Select2 -->
 <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
 
+<script>
+  //set input textbox value when select option
+  $(document).ready(function() {
+    $('#unit_code').on('change', function() {
+      if (unit_code) {
+        let plant_group = $('#unit_code option:selected').text().split('|')[1];
+        let model = $('#unit_code option:selected').text().split('|')[2];
+        let project = $('#unit_code option:selected').text().split('|')[3];
+        $('#plant_group').val(plant_group);
+        $('#unit_model').val(model);
+        $('#project').val(project);
+      
+      } else {
+        $('#project').empty();
+      }
+    });
+  });
+</script>
 <script>
   $(function () {
     //Initialize Select2 Elements

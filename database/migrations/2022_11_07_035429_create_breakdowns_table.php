@@ -24,6 +24,8 @@ return new class extends Migration
             $table->timestamp('end_date')->nullable();
             $table->integer('hm')->nullable();
             $table->string('project', 20)->nullable();
+            $table->string('plant_group')->nullable();
+            $table->string('unit_model')->nullable();
             $table->text('description')->nullable();
             $table->string('created_by')->nullable();
             $table->timestamps();

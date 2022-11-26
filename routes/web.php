@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BreakdownController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EquipmentApiController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PermissionController;

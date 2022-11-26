@@ -20,13 +20,13 @@ class BreakdownController extends Controller
 
     public function timeline()
     {
-        $response = Http::get(env('EQUIPMENTS_URL'));
-        $units = collect($response->json()['data']);
+        // $response = Http::get(env('EQUIPMENTS_URL'));
+        // $units = collect($response->json()['data']);
 
         $breakdowns = Breakdown::where('status', 'bd')->orderBy('start_date', 'asc')->get();
         $wos = WoData::orderBy('wo_no', 'asc')->distinct()->get(['wo_no', 'unit_code']);
 
-        return view('breakdowns.index_timeline', compact('breakdowns', 'units', 'wos'));
+        return view('breakdowns.index_timeline', compact('breakdowns', 'wos'));
     }
 
     public function create()
@@ -48,18 +48,15 @@ class BreakdownController extends Controller
             'description' => 'required',
         ]);
 
-        $response = Http::get(env('EQUIPMENTS_URL'));
-        $units = collect($response->json()['data']);
-        $breakdown_unit = $units->where('unit_code', $request->unit_code)->first();
-        $project = $breakdown_unit['project'];
-
         $breakdown = new Breakdown();
         $breakdown->unit_code = $request->unit_code;
         $breakdown->priority = $request->priority;
         $breakdown->start_date = $request->start_date . ' ' . $request->start_time . ':00';
         $breakdown->hm = $request->hm;
         $breakdown->bd_code = $request->bd_code;
-        $breakdown->project = $project;
+        $breakdown->project = $request->project;
+        $breakdown->plant_group = $request->plant_group;
+        $breakdown->unit_model = $request->unit_model;
         $breakdown->description = $request->description;
         $breakdown->status = 'BD';
         $breakdown->created_by = auth()->user()->username;
@@ -123,15 +120,10 @@ class BreakdownController extends Controller
     public function show($id)
     {
         $breakdown = Breakdown::findOrFail($id);
-
-        $response = Http::get(env('EQUIPMENTS_URL'));
-        $units = collect($response->json()['data']);
-        $unit_breakdown = $units->where('unit_code', $breakdown->unit_code)->first();
-
         $wos = WoData::where('unit_code', $breakdown->unit_code)->orderBy('wo_date', 'asc')->get();
         $st_date = date('Y-m-d', strtotime($breakdown->start_date));
         $st_time = date('H:i:s', strtotime($breakdown->start_date));
-        return view('breakdowns.show', compact('breakdown', 'wos', 'unit_breakdown', 'st_date', 'st_time'));
+        return view('breakdowns.show', compact('breakdown', 'wos', 'st_date', 'st_time'));
     }
 
     public function update_status(Request $request, $id)
@@ -227,7 +219,7 @@ class BreakdownController extends Controller
 
     public function data()
     {
-        $list = Breakdown::where('status', 'bd')->orderBy('start_date', 'asc')->get();
+        $list = Breakdown::where('status', 'BD')->orderBy('start_date', 'asc')->get();
 
         return datatables()->of($list)
             ->editColumn('start_date', function ($list) {
